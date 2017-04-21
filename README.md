@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/GeoffWilliams/puppet-jruby.svg?branch=master)](https://travis-ci.org/GeoffWilliams/puppet-jruby)
 # jruby
 
 #### Table of Contents
