@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Puppet Class: jruby
+  
+    &mdash; Documentation by YARD 0.9.8
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  pathId = "puppet_classes::jruby";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../puppet_class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (j)</a> &raquo;
+    <span class='title'><span class='object_link'>Puppet Classes</span></span>
+     &raquo; 
+    <span class="title">jruby</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="puppet_class_list_link"
+        href="../puppet_class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Puppet Class: jruby</h1>
+<div class="box_info">
+  
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>
+      manifests/init.pp
+    </dd>
+  </dl>
+</div>
+<h2>Overview</h2>
+<div class="docstring">
+  <div class="discussion">
+    
+<p>Jruby</p>
+
+<p>Install Jruby and create wrapper scripts for the commands: *
+<code>jgem</code> * <code>jirb</code> * <code>jruby</code> *
+<code>jrubyc</code></p>
+
+<p>Be sure to specify correct version when specifying a URL</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Installing the module default version of JRuby</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='id identifier rubyid_include'>include</span> <span class='const'>JRuby</span></code></pre>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Installing JRuby from your own infrastructure</p>
+</div></p>
+      
+      <pre class="example code"><code>class {&#39;jruby&#39;:
+  version =&gt; &quot;9.1.8.0&quot;,
+  baseurl =&gt; &quot;https://repo.megacorp.com/jruby&quot;,
+}</code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>version</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;9.1.8.0&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Version of JRuby to install</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>prefix</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;/opt/jruby&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Directory to install this version into</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>baseurl</span>
+      
+      
+        <span class='type'>(<tt>Any</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Download location. Leave blank to use the vendor default for this release
+or supply a download directory and the correct filename will be computed
+from the version. Make sure there isn&#39;t a trailing slash.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>checksum_value</span>
+      
+      
+        <span class='type'>(<tt>Any</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Ensure the downloaded file matches this checksum if set</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>checksum_type</span>
+      
+      
+        <span class='type'>(<tt>Any</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Method for computing checksums (@see <a
+href="https://forge.puppet.com/puppet/archive#archive">forge.puppet.com/puppet/archive#archive</a>)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><div class="method_details_list">
+  <table class="source_code">
+    <tr>
+      <td>
+        <pre class="lines">
+
+
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78</pre>
+      </td>
+      <td>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 26</span>
+
+class jruby(
+    String $version = &#39;9.1.8.0&#39;,
+    String $prefix  = &#39;/opt/jruby&#39;,
+    $baseurl        = undef,
+    $checksum_value = undef,
+    $checksum_type  = undef,
+) {
+
+  # default `jruby_home` is whatever the prefix was and this ends up as a
+  # symlink to the active version
+  $jruby_home = $prefix
+  $package    = &quot;jruby-bin-${version}.tar.gz&quot;
+
+  if $baseurl {
+    $_baseurl = $baseurl
+  } else {
+    $_baseurl = &quot;http://s3.amazonaws.com/jruby.org/downloads/${version}&quot;
+  }
+
+  $url = &quot;${_baseurl}/${package}&quot;
+
+  # default: symlink /opt/jruby to /opt/jruby-x.x.x.x (user configurable)
+  file { $jruby_home:
+    ensure =&gt; link,
+    target =&gt; &quot;${jruby_home}-${version}&quot;,
+  }
+
+  # perform the download and extraction.  By default creates /opt/jruby-x.x.x.x
+  archive { &quot;/tmp/${package}&quot;:
+    ensure        =&gt; present,
+    extract       =&gt; true,
+    extract_path  =&gt; dirname($prefix),
+    source        =&gt; $url,
+    checksum      =&gt; $checksum_value,
+    checksum_type =&gt; $checksum_type,
+    creates       =&gt; &quot;${jruby_home}-${version}&quot;,
+    cleanup       =&gt; true,
+  }
+
+  # Create convience wrappers for each jruby binary.  Seems a file is needed
+  # rather then a symlink, presumably because the script sets `JRUBY_HOME`
+  [&quot;jgem&quot;, &quot;jirb&quot;, &quot;jruby&quot;, &quot;jrubyc&quot;].each |$binary| {
+    # the puppet master giveth and the puppetmaster taketh away againeth
+    $epp_p = {&#39;jruby_home&#39; =&gt; $jruby_home, &#39;binary&#39; =&gt; $binary}
+    file {&quot;/usr/local/bin/${binary}&quot;:
+      ensure  =&gt; file,
+      owner   =&gt; &#39;root&#39;,
+      group   =&gt; &#39;root&#39;,
+      mode    =&gt; &#39;0755&#39;,
+      content =&gt; epp(&quot;${module_name}/binary.epp&quot;, $epp_p),
+    }
+  }
+}</pre>
+      </td>
+    </tr>
+  </table>
+</div>
+</div>
+
+      <div id="footer">
+     Generated by <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>.
+</div>
+
+    </div>
+  </body>
+</html>

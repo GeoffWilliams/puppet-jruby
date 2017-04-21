@@ -1,0 +1,5 @@
+<%- | String $jruby_home,
+      String $binary,
+| -%>
+#!/bin/sh
+JRUBY_HOME=<%= $jruby_home %> <%= $jruby_home %>/bin/<%= $binary %> "$@"
