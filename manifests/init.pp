@@ -75,4 +75,6 @@ class jruby(
       content => epp("${module_name}/binary.epp", $epp_p),
     }
   }
+
+  environment_variable::path_element { "${jruby_home}/bin": }
 }
