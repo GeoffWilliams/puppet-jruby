@@ -267,7 +267,8 @@ href="https://forge.puppet.com/puppet/archive#archive">forge.puppet.com/puppet/a
 77
 78
 79
-80</pre>
+80
+81</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/init.pp', line 26</span>
@@ -325,6 +326,7 @@ class jruby(
     }
   }
 
+  environment_variable::variable{ &quot;JRUBY_HOME=${jruby_home}&quot;: }
   environment_variable::path_element { &quot;${jruby_home}/bin&quot;: }
 }</pre>
       </td>

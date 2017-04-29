@@ -76,5 +76,6 @@ class jruby(
     }
   }
 
+  environment_variable::variable{ "JRUBY_HOME=${jruby_home}": }
   environment_variable::path_element { "${jruby_home}/bin": }
 }
