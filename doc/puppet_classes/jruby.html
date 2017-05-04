@@ -112,18 +112,19 @@
   
     <li>
       
-        <span class='name'>version</span>
+        <span class='name'>versions</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Any</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>&#39;9.1.8.0&#39;</tt>)</em>
+        <em class="default">(defaults to: <tt>[&#39;9.1.8.0&#39;]</tt>)</em>
       
       
         &mdash;
         <div class='inline'>
-<p>Version of JRuby to install</p>
+<p>Array of JRuby versions to install. The first supplied version will be
+configured as the system default</p>
 </div>
       
     </li>
@@ -168,18 +169,20 @@ from the version. Make sure there isn&#39;t a trailing slash.</p>
   
     <li>
       
-        <span class='name'>checksum_value</span>
+        <span class='name'>checksum_values</span>
       
       
         <span class='type'>(<tt>Any</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>undef</tt>)</em>
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
       
       
         &mdash;
         <div class='inline'>
-<p>Ensure the downloaded file matches this checksum if set</p>
+<p>Ensure the downloaded file matches this checksum if set if used, should be
+a has with a key for each version, eg
+<code>{&#39;9.1.8.0&#39;=&gt;&#39;deadbeef&#39;}</code></p>
 </div>
       
     </li>
@@ -213,9 +216,6 @@ href="https://forge.puppet.com/puppet/archive#archive">forge.puppet.com/puppet/a
         <pre class="lines">
 
 
-26
-27
-28
 29
 30
 31
@@ -268,52 +268,63 @@ href="https://forge.puppet.com/puppet/archive#archive">forge.puppet.com/puppet/a
 78
 79
 80
-81</pre>
+81
+82
+83
+84
+85
+86
+87
+88</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 26</span>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 29</span>
 
 class jruby(
-    String $version = &#39;9.1.8.0&#39;,
-    String $prefix  = &#39;/opt/jruby&#39;,
-    $baseurl        = undef,
-    $checksum_value = undef,
-    $checksum_type  = undef,
+    $versions         = [&#39;9.1.8.0&#39;],
+    String $prefix    = &#39;/opt/jruby&#39;,
+    $baseurl          = undef,
+    $checksum_values  = {},
+    $checksum_type    = undef,
 ) {
+
+  $_versions = any2array($versions)
 
   # default `jruby_home` is whatever the prefix was and this ends up as a
   # symlink to the active version
   $jruby_home = $prefix
-  $package    = &quot;jruby-bin-${version}.tar.gz&quot;
-
-  if $baseurl {
-    $_baseurl = $baseurl
-  } else {
-    $_baseurl = &quot;http://s3.amazonaws.com/jruby.org/downloads/${version}&quot;
-  }
-
-  $url = &quot;${_baseurl}/${package}&quot;
 
   # default: symlink /opt/jruby to /opt/jruby-x.x.x.x (user configurable)
   file { $jruby_home:
     ensure =&gt; link,
-    target =&gt; &quot;${jruby_home}-${version}&quot;,
+    target =&gt; &quot;${jruby_home}-${_versions[0]}&quot;,
   }
 
-  # perform the download and extraction.  By default creates /opt/jruby-x.x.x.x
-  archive { &quot;/tmp/${package}&quot;:
-    ensure        =&gt; present,
-    extract       =&gt; true,
-    extract_path  =&gt; dirname($prefix),
-    source        =&gt; $url,
-    checksum      =&gt; $checksum_value,
-    checksum_type =&gt; $checksum_type,
-    creates       =&gt; &quot;${jruby_home}-${version}&quot;,
-    cleanup       =&gt; true,
-  }
+  # perform the download and extraction.  By default creates
+  # /opt/jruby-x.x.x.x
+  $_versions.each |$version| {
+    if $baseurl {
+      $_baseurl = $baseurl
+    } else {
+      $_baseurl = &quot;http://s3.amazonaws.com/jruby.org/downloads/${version}&quot;
+    }
+    $package  = &quot;jruby-bin-${version}.tar.gz&quot;
+    $url      = &quot;${_baseurl}/${package}&quot;
 
+    archive { &quot;/tmp/${package}&quot;:
+      ensure        =&gt; present,
+      extract       =&gt; true,
+      extract_path  =&gt; dirname($prefix),
+      source        =&gt; $url,
+      checksum      =&gt; dig($checksum_values, $version),
+      checksum_type =&gt; $checksum_type,
+      creates       =&gt; &quot;${jruby_home}-${version}&quot;,
+      cleanup       =&gt; true,
+    }
+  }
   # Create convience wrappers for each jruby binary.  Seems a file is needed
-  # rather then a symlink, presumably because the script sets `JRUBY_HOME`
+  # rather then a symlink, presumably because the script sets `JRUBY_HOME`.
+  # Note that this uses the default jruby
   [&quot;jgem&quot;, &quot;jirb&quot;, &quot;jruby&quot;, &quot;jrubyc&quot;].each |$binary| {
     # the puppet master giveth and the puppetmaster taketh away againeth
     $epp_p = {&#39;jruby_home&#39; =&gt; $jruby_home, &#39;binary&#39; =&gt; $binary}

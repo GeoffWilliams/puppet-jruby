@@ -1,6 +1,6 @@
 {
   "name": "geoffwilliams-jruby",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": "geoffwilliams",
   "summary": "Download and configure JRuby on Linux",
   "license": "Apache-2.0",

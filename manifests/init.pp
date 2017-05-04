@@ -16,54 +16,61 @@
 #   }
 # Be sure to specify correct version when specifying a URL
 #
-# @param version Version of JRuby to install
+# @param versions Array of JRuby versions to install.  The first supplied
+#   version will be configured as the system default
 # @param prefix Directory to install this version into
 # @param baseurl Download location.  Leave blank to use the vendor default for this
 #   release or supply a download directory and the correct filename will be
 #   computed from the version.  Make sure there isn't a trailing slash.
-# @param checksum_value Ensure the downloaded file matches this checksum if set
+# @param checksum_values Ensure the downloaded file matches this checksum if set
+#   if used, should be a has with a key for each version, eg
+#   `{'9.1.8.0'=>'deadbeef'}`
 # @param checksum_type Method for computing checksums (@see https://forge.puppet.com/puppet/archive#archive)
 class jruby(
-    String $version = '9.1.8.0',
-    String $prefix  = '/opt/jruby',
-    $baseurl        = undef,
-    $checksum_value = undef,
-    $checksum_type  = undef,
+    $versions         = ['9.1.8.0'],
+    String $prefix    = '/opt/jruby',
+    $baseurl          = undef,
+    $checksum_values  = {},
+    $checksum_type    = undef,
 ) {
+
+  $_versions = any2array($versions)
 
   # default `jruby_home` is whatever the prefix was and this ends up as a
   # symlink to the active version
   $jruby_home = $prefix
-  $package    = "jruby-bin-${version}.tar.gz"
-
-  if $baseurl {
-    $_baseurl = $baseurl
-  } else {
-    $_baseurl = "http://s3.amazonaws.com/jruby.org/downloads/${version}"
-  }
-
-  $url = "${_baseurl}/${package}"
 
   # default: symlink /opt/jruby to /opt/jruby-x.x.x.x (user configurable)
   file { $jruby_home:
     ensure => link,
-    target => "${jruby_home}-${version}",
+    target => "${jruby_home}-${_versions[0]}",
   }
 
-  # perform the download and extraction.  By default creates /opt/jruby-x.x.x.x
-  archive { "/tmp/${package}":
-    ensure        => present,
-    extract       => true,
-    extract_path  => dirname($prefix),
-    source        => $url,
-    checksum      => $checksum_value,
-    checksum_type => $checksum_type,
-    creates       => "${jruby_home}-${version}",
-    cleanup       => true,
-  }
+  # perform the download and extraction.  By default creates
+  # /opt/jruby-x.x.x.x
+  $_versions.each |$version| {
+    if $baseurl {
+      $_baseurl = $baseurl
+    } else {
+      $_baseurl = "http://s3.amazonaws.com/jruby.org/downloads/${version}"
+    }
+    $package  = "jruby-bin-${version}.tar.gz"
+    $url      = "${_baseurl}/${package}"
 
+    archive { "/tmp/${package}":
+      ensure        => present,
+      extract       => true,
+      extract_path  => dirname($prefix),
+      source        => $url,
+      checksum      => dig($checksum_values, $version),
+      checksum_type => $checksum_type,
+      creates       => "${jruby_home}-${version}",
+      cleanup       => true,
+    }
+  }
   # Create convience wrappers for each jruby binary.  Seems a file is needed
-  # rather then a symlink, presumably because the script sets `JRUBY_HOME`
+  # rather then a symlink, presumably because the script sets `JRUBY_HOME`.
+  # Note that this uses the default jruby
   ["jgem", "jirb", "jruby", "jrubyc"].each |$binary| {
     # the puppet master giveth and the puppetmaster taketh away againeth
     $epp_p = {'jruby_home' => $jruby_home, 'binary' => $binary}
