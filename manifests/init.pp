@@ -11,10 +11,16 @@
 #
 # @example Installing JRuby from your own infrastructure
 #   class {'jruby':
-#     version => "9.1.8.0",
-#     baseurl => "https://repo.megacorp.com/jruby",
+#     versions => "9.1.8.0",
+#     baseurl  => "https://repo.megacorp.com/jruby",
 #   }
 # Be sure to specify correct version when specifying a URL
+#
+# @example Installing several JRubies
+#   class {'jruby':
+#     versions => ["6.6.6.0", "9.1.7.2", "9.1.8.0"]
+#   }
+# The first listed version will be installed as the system default
 #
 # @param versions Array of JRuby versions to install.  The first supplied
 #   version will be configured as the system default

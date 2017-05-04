@@ -82,6 +82,8 @@
 
 <p>Be sure to specify correct version when specifying a URL</p>
 
+<p>The first listed version will be installed as the system default</p>
+
   </div>
 </div>
 <div class="tags">
@@ -102,8 +104,17 @@
 </div></p>
       
       <pre class="example code"><code>class {&#39;jruby&#39;:
-  version =&gt; &quot;9.1.8.0&quot;,
-  baseurl =&gt; &quot;https://repo.megacorp.com/jruby&quot;,
+  versions =&gt; &quot;9.1.8.0&quot;,
+  baseurl  =&gt; &quot;https://repo.megacorp.com/jruby&quot;,
+}</code></pre>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Installing several JRubies</p>
+</div></p>
+      
+      <pre class="example code"><code>class {&#39;jruby&#39;:
+  versions =&gt; [&quot;6.6.6.0&quot;, &quot;9.1.7.2&quot;, &quot;9.1.8.0&quot;]
 }</code></pre>
     
   </div>
@@ -216,12 +227,6 @@ href="https://forge.puppet.com/puppet/archive#archive">forge.puppet.com/puppet/a
         <pre class="lines">
 
 
-29
-30
-31
-32
-33
-34
 35
 36
 37
@@ -275,10 +280,16 @@ href="https://forge.puppet.com/puppet/archive#archive">forge.puppet.com/puppet/a
 85
 86
 87
-88</pre>
+88
+89
+90
+91
+92
+93
+94</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 29</span>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 35</span>
 
 class jruby(
     $versions         = [&#39;9.1.8.0&#39;],
