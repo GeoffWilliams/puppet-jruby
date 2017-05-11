@@ -48,7 +48,6 @@ bundle exec puppet strings
 
 * Linux only
 * Not supported by Puppet, Inc.
-* Only installs a single version of JRuby
 
 ## Development
 
